@@ -29,6 +29,7 @@ public class HibernateAddressRepository implements AddressRepository {
     public List<Address> getAllAddresses() {
         return (List<Address>) sessionFactory.getCurrentSession()
             .createCriteria(Address.class)
+            .setReadOnly(true)
             .list();
     }
 

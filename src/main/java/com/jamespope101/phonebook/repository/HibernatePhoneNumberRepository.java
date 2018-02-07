@@ -29,6 +29,7 @@ public class HibernatePhoneNumberRepository implements PhoneNumberRepository {
     public List<PhoneNumber> getAllPhoneNumbers() {
         return (List<PhoneNumber>) sessionFactory.getCurrentSession()
             .createCriteria(PhoneNumber.class)
+            .setReadOnly(true)
             .list();
     }
 

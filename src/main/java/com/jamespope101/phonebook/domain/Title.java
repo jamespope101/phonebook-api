@@ -8,5 +8,6 @@ public enum Title {
     MISS,
     MS,
     MRS,
+    MX,
     DR
 }

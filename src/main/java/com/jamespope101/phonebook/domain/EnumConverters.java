@@ -5,7 +5,7 @@ import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
 /**
- * Created by jpope on 07/02/2018.
+ * Created by jpope on 07/02/2018. Used to convert a Java enum and its string representation persisted in database.
  */
 public class EnumConverters {
 
@@ -41,6 +41,14 @@ public class EnumConverters {
 
         public PhoneTypeConverter() {
             super(PhoneType.class);
+        }
+    }
+
+    @Converter(autoApply = true)
+    public static final class TitleConverter extends AbstractEnumConverter<Title> {
+
+        public TitleConverter() {
+            super(Title.class);
         }
     }
 }

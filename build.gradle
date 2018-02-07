@@ -24,6 +24,9 @@ dependencies {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
     }
     compile "javax.inject:javax.inject:$javaxVersion"
+    compile "javax.ws.rs:javax.ws.rs-api:$javaxWsRsVersion"
+    compile "org.glassfish.jersey.core:jersey-client:$jerseyVersion"
+    compile "org.glassfish.jersey.containers:jersey-container-servlet-core:$jerseyVersion"
     compile "org.springframework:spring-orm:$springVersion"
     compile "org.springframework:spring-tx:$springVersion"
     compile "org.springframework:spring-context-support:$springVersion"
