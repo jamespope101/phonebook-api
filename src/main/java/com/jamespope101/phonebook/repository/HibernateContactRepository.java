@@ -11,6 +11,7 @@ import com.jamespope101.phonebook.domain.Contact;
 import com.jamespope101.phonebook.domain.PhoneNumber;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.CriteriaSpecification;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
@@ -41,6 +42,7 @@ public class HibernateContactRepository implements ContactRepository {
     public List<Contact> getContacts() {
         return (List<Contact>) sessionFactory.getCurrentSession()
             .createCriteria(Contact.class)
+            .addOrder(Order.asc("lastName"))
             .setResultTransformer(CriteriaSpecification.DISTINCT_ROOT_ENTITY)
             .setReadOnly(true)
             .list();

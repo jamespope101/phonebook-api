@@ -86,8 +86,8 @@ public class HibernateContactRepositoryTest {
             String.format(PHONE_NUMBER_TEMPLATE, 2, "mobile", 44, 774, 192031),
             String.format(ADDRESS_TEMPLATE, 1, "25", "Mean Street", "Z3 EQ2", "UK"),
             String.format(ADDRESS_TEMPLATE, 2, "Remote Moat", "Country Lane", "CO2 3", "Sweden"),
-            String.format(CONTACT_TEMPLATE, 1, "MR", "James", "Edward", "Pope", 1L),
-            String.format(CONTACT_TEMPLATE, 2, "MISS", "Lisa", "J", "Simpson", 2L),
+            String.format(CONTACT_TEMPLATE, 1, "MISS", "Lisa", "J", "Simpson", 2L),
+            String.format(CONTACT_TEMPLATE, 2, "MR", "James", "Edward", "Pope", 1L),
             String.format(CONTACT_PHONE_NUMBER_TEMPLATE, 1L, 1L),
             String.format(CONTACT_PHONE_NUMBER_TEMPLATE, 1L, 2L) // contact 1 has phone numbers 1 and 2, contact 2 has no phone numbers
         );
@@ -100,27 +100,27 @@ public class HibernateContactRepositoryTest {
     }
 
     @Test
-    public void shouldGetAllContacts() {
+    public void shouldGetAllContactsSortedAlphabeticallyByLastName() {
         List<Contact> contacts = contactRepository.getContacts();
 
         assertThat(contacts).hasSize(2)
             .extracting(Contact::getId, Contact::getTitle, Contact::getFirstName, Contact::getMiddleName, Contact::getLastName,
                 contact -> contact.getAddress().getPostcode() // not a special identifier, but proof the full join entity was retrieved
             )
-            .containsExactly(
-                tuple(1L, Title.MR, "James", "Edward", "Pope", "Z3 EQ2"),
-                tuple(2L, Title.MISS, "Lisa", "J", "Simpson", "CO2 3")
+            .containsExactly( // note: sorted by surname
+                tuple(2L, Title.MR, "James", "Edward", "Pope", "Z3 EQ2"),
+                tuple(1L, Title.MISS, "Lisa", "J", "Simpson", "CO2 3")
             );
 
-        assertThat(contacts.get(0).getPhoneNumbers()).extracting("number").containsOnly(234621, 192031);
-        assertThat(contacts.get(1).getPhoneNumbers()).isEmpty();
+        assertThat(contacts.get(0).getPhoneNumbers()).isEmpty();
+        assertThat(contacts.get(1).getPhoneNumbers()).extracting("number").containsOnly(234621, 192031);
     }
 
     @Test
     public void shouldFindContactById() {
         Contact contact = contactRepository.findContactById(2L).orElseThrow(AssertionError::new);
-        assertThat(contact.getFirstName()).isEqualTo("Lisa");
-        assertThat(contact.getAddress().getPostcode()).isEqualTo("CO2 3");
+        assertThat(contact.getFirstName()).isEqualTo("James");
+        assertThat(contact.getAddress().getPostcode()).isEqualTo("Z3 EQ2");
         assertThat(contact.getPhoneNumbers()).isEmpty();
     }
 
