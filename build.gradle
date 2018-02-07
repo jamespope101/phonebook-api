@@ -23,16 +23,21 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-web:$springBootVersion") {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
     }
+    compile "javax.inject:javax.inject:$javaxVersion"
+    compile "org.springframework:spring-orm:$springVersion"
     compile "org.springframework:spring-tx:$springVersion"
     compile "org.springframework:spring-context-support:$springVersion"
     compile "com.google.guava:guava:$guavaVersion"
+    compile "org.hibernate:hibernate-core:$hibernateVersion"
+    compile "com.h2database:h2:$h2Version"
     compileOnly "org.projectlombok:lombok:$lombokVersion"
 
     testCompile "junit:junit:$junitVersion"
+    testCompile "org.springframework:spring-test:$springVersion"
+    testCompile "org.dbunit:dbunit:$dbunitVersion"
     testCompile "org.hamcrest:hamcrest-all:$hamcrestVersion"
     testCompile "org.mockito:mockito-core:$mockitoVersion"
     testCompile "org.assertj:assertj-core:$assertjVersion"
-    testCompile "com.h2database:h2:$h2Version"
 
 }
 
