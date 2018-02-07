@@ -1,0 +1,38 @@
+group 'com.jamespope101'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'org.springframework.boot'
+
+sourceCompatibility = 1.8
+
+buildscript {
+    repositories {
+        jcenter()
+        dependencies {
+            classpath("org.springframework.boot:spring-boot-gradle-plugin:$springBootVersion")
+        }
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web:$springBootVersion") {
+        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
+    }
+    compile "org.springframework:spring-tx:$springVersion"
+    compile "org.springframework:spring-context-support:$springVersion"
+    compile "com.google.guava:guava:$guavaVersion"
+    compileOnly "org.projectlombok:lombok:$lombokVersion"
+
+    testCompile "junit:junit:$junitVersion"
+    testCompile "org.hamcrest:hamcrest-all:$hamcrestVersion"
+    testCompile "org.mockito:mockito-core:$mockitoVersion"
+    testCompile "org.assertj:assertj-core:$assertjVersion"
+    testCompile "com.h2database:h2:$h2Version"
+
+}
+
