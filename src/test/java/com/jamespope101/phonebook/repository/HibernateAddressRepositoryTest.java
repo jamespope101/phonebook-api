@@ -7,8 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import javax.sql.DataSource;
 
-import com.jamespope101.phonebook.domain.PhoneNumber;
-import com.jamespope101.phonebook.domain.PhoneType;
+import com.jamespope101.phonebook.domain.Address;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseDataSourceConnection;
@@ -32,7 +31,7 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import static com.jamespope101.phonebook.repository.DatasetTemplates.PHONE_NUMBER_TEMPLATE;
+import static com.jamespope101.phonebook.repository.DatasetTemplates.ADDRESS_TEMPLATE;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
@@ -42,10 +41,10 @@ import static org.assertj.core.api.Assertions.tuple;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = RepositoryTestContext.class)
 @Transactional
-public class HibernatePhoneNumberRepositoryTest {
+public class HibernateAddressRepositoryTest {
 
     @Autowired
-    private PhoneNumberRepository phoneNumberRepository;
+    private AddressRepository addressRepository;
 
     private static final TransactionDefinition TX_DEFINITION = new DefaultTransactionDefinition();
 
@@ -70,8 +69,8 @@ public class HibernatePhoneNumberRepositoryTest {
         connection.getConfig().setProperty(DatabaseConfig.PROPERTY_DATATYPE_FACTORY, new H2DataTypeFactory());
 
         final FlatXmlDataSet dataSet = RepositoryTestContext.createDataSet(
-            String.format(PHONE_NUMBER_TEMPLATE, 1, "home", 44, 151, 234621),
-            String.format(PHONE_NUMBER_TEMPLATE, 2, "mobile", 44, 774, 192031)
+            String.format(ADDRESS_TEMPLATE, 1, "25", "Mean Street", "Z3 EQ2", "UK"),
+            String.format(ADDRESS_TEMPLATE, 2, "Remote Moat", "Country Lane", "CO2 3", "Sweden")
         );
 
         final Statement st = connection.getConnection().createStatement();
@@ -82,44 +81,44 @@ public class HibernatePhoneNumberRepositoryTest {
     }
 
     @Test
-    public void shouldGetAllPhoneNumbers() {
-        List<PhoneNumber> phoneNumbers = phoneNumberRepository.getAllPhoneNumbers();
+    public void shouldGetAllAddresses() {
+        List<Address> addresses = addressRepository.getAllAddresses();
 
-        assertThat(phoneNumbers).hasSize(2).extracting("id", "type", "countryCode", "areaCode", "number")
+        assertThat(addresses).hasSize(2).extracting("id", "houseNumber", "streetName", "postcode", "country")
             .containsExactly(
-                tuple(1L, PhoneType.home, 44, 151, 234621),
-                tuple(2L, PhoneType.mobile, 44, 774, 192031)
+                tuple(1L, "25", "Mean Street", "Z3 EQ2", "UK"),
+                tuple(2L, "Remote Moat", "Country Lane", "CO2 3", "Sweden")
             );
     }
 
     @Test
-    public void shouldFindPhoneNumberById() {
-        Optional<PhoneNumber> phoneNumber = phoneNumberRepository.findPhoneNumber(1L);
-        PhoneNumber expectedPhoneNumber = PhoneNumber.builder().id(1L).type(PhoneType.home).countryCode(44).areaCode(151).number(234621).build();
-        assertThat(phoneNumber.orElseThrow(AssertionError::new))
-            .isEqualToComparingFieldByField(expectedPhoneNumber);
+    public void shouldFindAddressById() {
+        Optional<Address> address = addressRepository.findAddress(1L);
+        Address expectedAddress = Address.builder().id(1L).houseNumber("25").streetName("Mean Street").postcode("Z3 EQ2").country("UK").build();
+        assertThat(address.orElseThrow(AssertionError::new))
+            .isEqualToComparingFieldByField(expectedAddress);
     }
 
     @Test
-    public void shouldReturnEmptyIfPhoneNumberNotFound() {
-        Optional<PhoneNumber> phoneNumber = phoneNumberRepository.findPhoneNumber(404L); // does not exist in DB
-        assertThat(phoneNumber).isEmpty();
+    public void shouldReturnEmptyIfAddressNotFound() {
+        Optional<Address> address = addressRepository.findAddress(404L); // does not exist in DB
+        assertThat(address).isEmpty();
     }
 
     @Test
-    public void shouldCreatePhoneNumber() throws SQLException, DataSetException {
-        PhoneNumber newPhoneNumber = PhoneNumber.builder().type(PhoneType.work).countryCode(44).areaCode(181).number(123456).build();
-        phoneNumberRepository.createPhoneNumber(newPhoneNumber);
+    public void shouldCreateAddress() throws SQLException, DataSetException {
+        Address newAddress = Address.builder().houseNumber("666").streetName("Park Avenue").postcode("NY123").country("USA").build();
+        addressRepository.createAddress(newAddress);
         flush();
 
-        ITable phoneNumberTable = connection.createDataSet().getTable("phone_number");
+        ITable addressTable = connection.createDataSet().getTable("address");
 
-        assertThat(phoneNumberTable.getRowCount()).isEqualTo(2 + 1);
-        assertThat(phoneNumberTable.getValue(2, "id")).isEqualTo(BigInteger.valueOf(3L));
-        assertThat(phoneNumberTable.getValue(2, "type")).isEqualTo("work");
-        assertThat(phoneNumberTable.getValue(2, "country_code")).isEqualTo(44);
-        assertThat(phoneNumberTable.getValue(2, "area_code")).isEqualTo(181);
-        assertThat(phoneNumberTable.getValue(2, "number")).isEqualTo(123456);
+        assertThat(addressTable.getRowCount()).isEqualTo(2 + 1);
+        assertThat(addressTable.getValue(2, "id")).isEqualTo(BigInteger.valueOf(3L));
+        assertThat(addressTable.getValue(2, "number")).isEqualTo("666");
+        assertThat(addressTable.getValue(2, "street_name")).isEqualTo("Park Avenue");
+        assertThat(addressTable.getValue(2, "postcode")).isEqualTo("NY123");
+        assertThat(addressTable.getValue(2, "country")).isEqualTo("USA");
     }
 
     private void flush() {
