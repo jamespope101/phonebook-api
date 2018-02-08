@@ -7,9 +7,10 @@ import javax.ws.rs.core.Application;
 import javax.ws.rs.core.Response;
 
 import com.google.common.collect.ImmutableList;
-import com.jamespope101.phonebook.domain.Address;
+import com.jamespope101.phonebook.domain.PhoneNumber;
+import com.jamespope101.phonebook.domain.PhoneType;
 import com.jamespope101.phonebook.resource.jerseyconfig.JerseyConfig;
-import com.jamespope101.phonebook.service.AddressOps;
+import com.jamespope101.phonebook.service.PhoneNumberOps;
 import com.jayway.jsonassert.JsonAssert;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
@@ -21,8 +22,8 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import static com.jamespope101.phonebook.TestFixtures.ADDRESS_1;
-import static com.jamespope101.phonebook.TestFixtures.ADDRESS_2;
+import static com.jamespope101.phonebook.TestFixtures.PHONE_NUMBER_1;
+import static com.jamespope101.phonebook.TestFixtures.PHONE_NUMBER_2;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON_TYPE;
 import static javax.ws.rs.core.Response.Status.NO_CONTENT;
 import static javax.ws.rs.core.Response.Status.OK;
@@ -36,12 +37,12 @@ import static org.mockito.Mockito.when;
 /**
  * Created by jpope on 08/02/2018.
  */
-public class AddressResourceTest extends JerseyTest {
+public class PhoneNumberResourceTest extends JerseyTest {
 
-    private static final List<Address> ADDRESSES = ImmutableList.of(ADDRESS_1, ADDRESS_2);
+    private static final List<PhoneNumber> PHONE_NUMBERS = ImmutableList.of(PHONE_NUMBER_1, PHONE_NUMBER_2);
 
     @Mock
-    private AddressOps addressOps;
+    private PhoneNumberOps phoneNumberOps;
 
     @Override
     protected TestContainerFactory getTestContainerFactory() throws TestContainerException {
@@ -55,7 +56,7 @@ public class AddressResourceTest extends JerseyTest {
         enable(TestProperties.LOG_TRAFFIC);
         enable(TestProperties.DUMP_ENTITY);
 
-        return new JerseyConfig().registerInstances(new AddressResource(addressOps));
+        return new JerseyConfig().registerInstances(new PhoneNumberResource(phoneNumberOps));
     }
 
     @Override
@@ -64,10 +65,10 @@ public class AddressResourceTest extends JerseyTest {
     }
 
     @Test
-    public void shouldGetAllAddresses() {
-        when(addressOps.getAllAddresses()).thenReturn(ADDRESSES);
+    public void shouldGetAllPhoneNumbers() {
+        when(phoneNumberOps.getAllPhoneNumbers()).thenReturn(PHONE_NUMBERS);
 
-        final Response response = target("/addresses")
+        final Response response = target("/phone-numbers")
             .request(APPLICATION_JSON_TYPE)
             .get();
 
@@ -79,23 +80,23 @@ public class AddressResourceTest extends JerseyTest {
             .assertThat("$", hasSize(2))
 
             .assertThat("$[0].id", is(1))
-            .assertThat("$[0].houseNumber", is("92"))
-            .assertThat("$[0].streetName", is("Evergreen Terrace"))
-            .assertThat("$[0].postcode", is("CO2 3"))
-            .assertThat("$[0].country", is("UK"))
+            .assertThat("$[0].type", is("mobile"))
+            .assertThat("$[0].countryCode", is(44))
+            .assertThat("$[0].areaCode", is(772))
+            .assertThat("$[0].number", is(432813))
 
             .assertThat("$[1].id", is(2))
-            .assertThat("$[1].houseNumber", is("Remote Moat"))
-            .assertThat("$[1].streetName", is("Country Lane"))
-            .assertThat("$[1].postcode", is("E3 211"))
-            .assertThat("$[1].country", is("Sweden"));
+            .assertThat("$[1].type", is("home"))
+            .assertThat("$[1].countryCode", is(44))
+            .assertThat("$[1].areaCode", is(151))
+            .assertThat("$[1].number", is(123456));
     }
 
     @Test
-    public void shouldGetSingleAddress() {
-        when(addressOps.findAddress(1L)).thenReturn(ADDRESS_1);
+    public void shouldGetSinglePhoneNumber() {
+        when(phoneNumberOps.findPhoneNumber(1L)).thenReturn(PHONE_NUMBER_1);
 
-        final Response response = target("/addresses/1")
+        final Response response = target("/phone-numbers/1")
             .request(APPLICATION_JSON_TYPE)
             .get();
 
@@ -105,43 +106,43 @@ public class AddressResourceTest extends JerseyTest {
         String json = response.readEntity(String.class);
         JsonAssert.with(json)
             .assertThat("$.id", is(1))
-            .assertThat("$.houseNumber", is("92"))
-            .assertThat("$.streetName", is("Evergreen Terrace"))
-            .assertThat("$.postcode", is("CO2 3"))
-            .assertThat("$.country", is("UK"))
-        ;
+            .assertThat("$.type", is("mobile"))
+            .assertThat("$.countryCode", is(44))
+            .assertThat("$.areaCode", is(772))
+            .assertThat("$.number", is(432813));
     }
 
     @Test
-    public void shouldCreateANewAddress() {
-        final Address addressSubmission = Address.builder()
-            .houseNumber("24")
-            .streetName("City Road")
-            .postcode("E6 6EE")
-            .country("UK")
+    public void shouldCreateANewPhoneNumber() {
+        final PhoneNumber phoneNumberSubmission = PhoneNumber.builder()
+            .type(PhoneType.work)
+            .countryCode(31)
+            .areaCode(123)
+            .number(392810)
             .build();
 
-        final Response response = target("/addresses")
+        final Response response = target("/phone-numbers")
             .request()
-            .post(Entity.entity(addressSubmission, APPLICATION_JSON_TYPE));
+            .post(Entity.entity(phoneNumberSubmission, APPLICATION_JSON_TYPE));
 
         assertThat(response.getStatus()).isEqualTo(NO_CONTENT.getStatusCode());
 
-        ArgumentCaptor<Address> addressCaptor = ArgumentCaptor.forClass(Address.class);
-        verify(addressOps).createAddress(addressCaptor.capture());
-        assertThat(addressCaptor.getValue()).isEqualToComparingFieldByField(addressSubmission);
+        ArgumentCaptor<PhoneNumber> phoneNumberCaptor = ArgumentCaptor.forClass(PhoneNumber.class);
+        verify(phoneNumberOps).createPhoneNumber(phoneNumberCaptor.capture());
+        assertThat(phoneNumberCaptor.getValue()).isEqualToComparingFieldByField(phoneNumberSubmission);
     }
 
     @Test
-    public void shouldSubmitAddressForUpdate() {
-        final Response response = target("/addresses/1")
+    public void shouldSubmitPhoneNumberForUpdate() {
+        final Response response = target("/phone-numbers/1")
             .request()
-            .put(Entity.entity(ADDRESS_1, APPLICATION_JSON_TYPE));
+            .put(Entity.entity(PHONE_NUMBER_1, APPLICATION_JSON_TYPE));
 
         assertThat(response.getStatus()).isEqualTo(NO_CONTENT.getStatusCode());
 
-        ArgumentCaptor<Address> addressCaptor = ArgumentCaptor.forClass(Address.class);
-        verify(addressOps).updateAddress(eq(1L), addressCaptor.capture());
-        assertThat(addressCaptor.getValue()).isEqualToComparingFieldByField(ADDRESS_1);
+        ArgumentCaptor<PhoneNumber> phoneNumberCaptor = ArgumentCaptor.forClass(PhoneNumber.class);
+        verify(phoneNumberOps).updatePhoneNumber(eq(1L), phoneNumberCaptor.capture());
+        assertThat(phoneNumberCaptor.getValue()).isEqualToComparingFieldByField(PHONE_NUMBER_1);
     }
+
 }
