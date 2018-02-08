@@ -54,7 +54,7 @@ public class TestFixtures {
         .build();
 
     public static final Contact CONTACT_2 = Contact.builder()
-        .id(1L)
+        .id(2L)
         .title(Title.MX)
         .firstName("Alex")
         .middleName(null)
