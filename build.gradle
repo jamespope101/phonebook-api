@@ -23,6 +23,12 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-web:$springBootVersion") {
         exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
     }
+    compile "org.springframework.boot:spring-boot-starter-jetty:$springBootVersion"
+    compile "org.springframework.boot:spring-boot-starter-actuator:$springBootVersion"
+    compile "org.springframework:spring-webmvc:$springVersion"
+    compile "org.springframework.security:spring-security-web:$springSecurityVersion"
+    compile "org.springframework.security:spring-security-config:$springSecurityVersion"
+    compile "org.flywaydb:flyway-core:$flywayVersion"
     compile "javax.inject:javax.inject:$javaxVersion"
     compile "javax.ws.rs:javax.ws.rs-api:$javaxWsRsVersion"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:$jacksonVersion"
@@ -30,12 +36,16 @@ dependencies {
     compile "org.glassfish.jersey.media:jersey-media-json-jackson:$jerseyVersion"
     compile "org.glassfish.jersey.core:jersey-client:$jerseyVersion"
     compile "org.glassfish.jersey.containers:jersey-container-servlet-core:$jerseyVersion"
+    compile "org.aspectj:aspectjtools:$aspectjVersion"
     compile "org.springframework:spring-orm:$springVersion"
     compile "org.springframework:spring-tx:$springVersion"
     compile "org.springframework:spring-context-support:$springVersion"
     compile "com.google.guava:guava:$guavaVersion"
     compile "org.hibernate:hibernate-core:$hibernateVersion"
-    compile "com.h2database:h2:$h2Version"
+    compile "com.zaxxer:HikariCP:$HikariCPVersion"
+    testCompile "com.h2database:h2:$h2Version"
+    runtime "com.h2database:h2:$h2Version"
+
     compileOnly "org.projectlombok:lombok:$lombokVersion"
 
     testCompile "org.glassfish.jersey.test-framework.providers:jersey-test-framework-provider-inmemory:$jerseyVersion"

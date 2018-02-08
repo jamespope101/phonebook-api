@@ -184,6 +184,15 @@ public class HibernateContactRepositoryTest {
         contactRepository.createContact(newContact);
     }
 
+    @Test
+    public void shouldDeleteContact() throws SQLException, DataSetException {
+        contactRepository.deleteContact(2L);
+        flush();
+
+        ITable contactTable = connection.createDataSet().getTable("contact");
+        assertThat(contactTable.getRowCount()).isEqualTo(2 - 1);
+    }
+
     private void flush() {
         platformTransactionManager.getTransaction(TX_DEFINITION).flush();
     }

@@ -22,7 +22,7 @@ import static com.google.common.collect.Lists.newArrayList;
  * Created by jpope on 07/02/2018.
  */
 @EnableTransactionManagement
-@ComponentScan(basePackages = "com.jamespope101.phonebook")
+@ComponentScan(basePackages = "com.jamespope101.phonebook.repository")
 public class RepositoryTestContext {
 
     private static final String[] ENTITY_PACKAGES = {

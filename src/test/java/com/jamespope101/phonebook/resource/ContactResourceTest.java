@@ -165,4 +165,13 @@ public class ContactResourceTest extends JerseyTest {
         assertThat(capturedContact.getPhoneNumbers()).hasSize(1);
     }
 
+    @Test
+    public void shouldDeleteContact() {
+        final Response response = target("/contacts/1")
+            .request()
+            .delete();
+
+        verify(contactOps).deleteContact(1L);
+        assertThat(response.getStatus()).isEqualTo(NO_CONTENT.getStatusCode());
+    }
 }

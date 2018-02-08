@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.Set;
 import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
+import javax.ws.rs.NotFoundException;
 
 import com.jamespope101.phonebook.domain.Address;
 import com.jamespope101.phonebook.domain.Contact;
@@ -72,5 +73,11 @@ public class HibernateContactRepository implements ContactRepository {
             }
         }
         sessionFactory.getCurrentSession().save(contact);
+    }
+
+    @Override
+    public void deleteContact(Long contactId) {
+        Contact contactToDelete = findContactById(contactId).orElseThrow(NotFoundException::new);
+        sessionFactory.getCurrentSession().delete(contactToDelete);
     }
 }

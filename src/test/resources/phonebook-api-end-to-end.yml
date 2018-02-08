@@ -1,0 +1,9 @@
+server:
+  port: 2018
+jdbc:
+  url: jdbc:h2:./build/h2/testdb;MODE=MySQL;DB_CLOSE_ON_EXIT=FALSE;INIT=CREATE SCHEMA IF NOT EXISTS \"public\"
+  driverClassName: org.h2.Driver
+  user: sa
+  pass:
+flyway:
+  schemas: PUBLIC

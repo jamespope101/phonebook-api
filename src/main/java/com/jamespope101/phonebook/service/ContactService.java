@@ -3,6 +3,7 @@ package com.jamespope101.phonebook.service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import javax.inject.Inject;
 import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 
@@ -12,7 +13,6 @@ import com.jamespope101.phonebook.domain.PhoneNumber;
 import com.jamespope101.phonebook.repository.AddressRepository;
 import com.jamespope101.phonebook.repository.ContactRepository;
 import com.jamespope101.phonebook.repository.PhoneNumberRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import static java.util.stream.Collectors.toSet;
@@ -23,12 +23,16 @@ import static java.util.stream.Collectors.toSet;
 @Service
 public class ContactService implements ContactOps {
 
-    @Autowired
     private ContactRepository contactRepository;
-    @Autowired
     private AddressRepository addressRepository;
-    @Autowired
     private PhoneNumberRepository phoneNumberRepository;
+
+    @Inject
+    ContactService(ContactRepository contactRepository, AddressRepository addressRepository, PhoneNumberRepository phoneNumberRepository) {
+        this.contactRepository = contactRepository;
+        this.addressRepository = addressRepository;
+        this.phoneNumberRepository = phoneNumberRepository;
+    }
 
     @Override
     public List<Contact> getAllContacts() {
@@ -76,5 +80,10 @@ public class ContactService implements ContactOps {
         existing.setLastName(updateSubmission.getLastName());
         existing.setAddress(updateSubmission.getAddress());
         existing.setPhoneNumbers(updateSubmission.getPhoneNumbers());
+    }
+
+    @Override
+    public void deleteContact(Long id) {
+        contactRepository.deleteContact(id);
     }
 }

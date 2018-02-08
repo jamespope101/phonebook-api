@@ -17,4 +17,5 @@ public interface ContactOps {
 
     void updateContact(Long id, Contact updateSubmission);
 
+    void deleteContact(Long id);
 }

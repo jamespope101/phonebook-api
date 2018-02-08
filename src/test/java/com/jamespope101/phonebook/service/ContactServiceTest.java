@@ -172,4 +172,10 @@ public class ContactServiceTest {
 
         contactService.updateContact(1L, updateSubmission);
     }
+
+    @Test
+    public void shouldDeleteContact() {
+        contactService.deleteContact(1L);
+        verify(mockRepository).deleteContact(1L);
+    }
 }

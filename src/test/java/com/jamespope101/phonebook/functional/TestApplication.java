@@ -8,8 +8,12 @@ import org.junit.rules.ExternalResource;
  */
 public class TestApplication extends ExternalResource {
 
+    static {
+        System.setProperty("sun.net.http.allowRestrictedHeaders", "true");
+    }
+
     private static String[] ARGS = {
-        "--spring.profiles.active=functional-tests",
+        "--spring.profiles.active=end-to-end",
     };
 
     private static class ServiceInstanceHolder {

@@ -1,0 +1,7 @@
+server:
+  port: 2019
+jdbc:
+  driverClassName: org.h2.Driver
+  url: jdbc:h2:mem:phonebook
+  user: phonebook
+  pass: password
