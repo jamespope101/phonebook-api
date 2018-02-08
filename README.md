@@ -16,7 +16,9 @@ The application logic is split into three separate layers, and components residi
 - A service layer to enforce business-defined rules and error-handling.
 - A resource layer which defines the REST API paths and requests.
 
-There are also functional tests in EndToEndTest, which spins up a local application
+There are also functional tests in EndToEndTest, which spins up a local application with some pre-initialised data and asserts on 
+the responses to various requests against the API.
+
 ## Getting Started
 
 ### Prerequisites
@@ -26,9 +28,6 @@ There are also functional tests in EndToEndTest, which spins up a local applicat
 ### Build the Application
 `./gradlew clean build`
 
-## Testing
-All unit/functional tests will be run as part of the build task.
-
 ### Running the App Locally
 The app can be run locally by running ApplicationBoot.main() with the following VM options in an IntelliJ run configuration:
 
@@ -36,3 +35,6 @@ The app can be run locally by running ApplicationBoot.main() with the following 
 
 This will run the application with the default configuration properties in `src/main/resources/phonebook-api.yml`, as well as overrides for the local profile
 stored in `src/main/resources/phonebook-api-local.yml`.
+
+## Testing
+All unit/functional tests will be run as part of the build task.
