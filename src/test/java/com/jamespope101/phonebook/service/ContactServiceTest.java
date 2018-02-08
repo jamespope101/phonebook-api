@@ -1,12 +1,17 @@
 package com.jamespope101.phonebook.service;
 
 import java.util.Optional;
+import javax.ws.rs.BadRequestException;
 import javax.ws.rs.NotFoundException;
 
 import com.google.common.collect.ImmutableList;
+import com.jamespope101.phonebook.domain.Address;
 import com.jamespope101.phonebook.domain.Contact;
+import com.jamespope101.phonebook.domain.PhoneNumber;
 import com.jamespope101.phonebook.domain.Title;
+import com.jamespope101.phonebook.repository.AddressRepository;
 import com.jamespope101.phonebook.repository.ContactRepository;
+import com.jamespope101.phonebook.repository.PhoneNumberRepository;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -36,6 +41,10 @@ public class ContactServiceTest {
 
     @Mock
     private ContactRepository mockRepository;
+    @Mock
+    private AddressRepository addressRepository;
+    @Mock
+    private PhoneNumberRepository phoneNumberRepository;
 
     @InjectMocks
     private ContactService contactService;
@@ -57,35 +66,35 @@ public class ContactServiceTest {
     }
 
     @Test
-    public void shouldReturnAllPhoneNumbers() {
+    public void shouldReturnAllContacts() {
         when(mockRepository.getAllContacts()).thenReturn(ImmutableList.of(CONTACT_1, CONTACT_2));
 
         assertThat(contactService.getAllContacts()).containsExactly(CONTACT_1, CONTACT_2);
     }
 
     @Test
-    public void shouldReturnFoundPhoneNumber() {
+    public void shouldReturnFoundContact() {
         when(mockRepository.findContactById(1L)).thenReturn(Optional.of(CONTACT_1));
         assertThat(contactService.findContact(1L)).isEqualTo(CONTACT_1);
     }
 
     @Test
-    public void shouldThrowNotFoundExceptionForNonExistentPhoneNumber() {
+    public void shouldThrowNotFoundExceptionForNonExistentContact() {
         expectedException.expect(NotFoundException.class);
-        expectedException.expectMessage("Could not find address with id 404");
+        expectedException.expectMessage("Could not find contact with id 404");
 
         when(mockRepository.findContactById(404L)).thenReturn(Optional.empty());
         contactService.findContact(404L);
     }
 
     @Test
-    public void shouldCreatePhoneNumber() {
+    public void shouldCreateContact() {
         contactService.createContact(CONTACT_2);
         verify(mockRepository).createContact(CONTACT_2);
     }
 
     @Test
-    public void shouldEditPhoneNumber() {
+    public void shouldEditContactWithValidAddressAndPhoneNumberAssociations() {
         when(mockRepository.findContactById(1L)).thenReturn(Optional.of(existingContact));
         Contact updateSubmission = Contact.builder()
             .id(1L)
@@ -93,13 +102,74 @@ public class ContactServiceTest {
             .firstName("Marge")
             .middleName(null)
             .lastName("Simpson")
-            .address(ADDRESS_2)
-            .phoneNumber(PHONE_NUMBER_2)
+            .address(Address.builder().id(2L).build())
+            .phoneNumber(PhoneNumber.builder().id(2L).build())
             .build();
 
+        when(addressRepository.findAddress(2L)).thenReturn(Optional.of(ADDRESS_2));
+        when(phoneNumberRepository.findPhoneNumber(2L)).thenReturn(Optional.of(PHONE_NUMBER_2));
         contactService.updateContact(1L, updateSubmission);
 
-        assertThat(existingContact).isEqualToComparingFieldByField(updateSubmission);
+        assertThat(existingContact).isEqualToIgnoringGivenFields(updateSubmission, "address", "phoneNumbers");
+        assertThat(existingContact.getAddress()).isEqualTo(ADDRESS_2);
+        assertThat(existingContact.getPhoneNumbers()).containsExactly(PHONE_NUMBER_2);
     }
 
+    @Test
+    public void shouldThrowExceptionForEditingNonExistentContact() {
+        when(mockRepository.findContactById(404L)).thenReturn(Optional.empty());
+
+        Contact updateSubmission = Contact.builder()
+            .id(404L)
+            .build();
+
+        expectedException.expect(NotFoundException.class);
+        expectedException.expectMessage("Could not find contact with id 404");
+
+        contactService.updateContact(404L, updateSubmission);
+    }
+
+    @Test
+    public void shouldThrowExceptionForContactWithNonExistentAddress() {
+        when(mockRepository.findContactById(1L)).thenReturn(Optional.of(existingContact));
+
+        Contact updateSubmission = Contact.builder()
+            .id(1L)
+            .title(Title.MRS)
+            .firstName("Marge")
+            .middleName(null)
+            .lastName("Simpson")
+            .address(Address.builder().id(404L).build())
+            .phoneNumber(PhoneNumber.builder().id(2L).build())
+            .build();
+
+        when(addressRepository.findAddress(404L)).thenReturn(Optional.empty());
+        expectedException.expect(BadRequestException.class);
+        expectedException.expectMessage("Trying to give contact address with id 404, which does not exist");
+
+        contactService.updateContact(1L, updateSubmission);
+    }
+
+    @Test
+    public void shouldThrowExceptionForContactWithNonExistentPhoneNumber() {
+        when(mockRepository.findContactById(1L)).thenReturn(Optional.of(existingContact));
+
+        Contact updateSubmission = Contact.builder()
+            .id(1L)
+            .title(Title.MRS)
+            .firstName("Marge")
+            .middleName(null)
+            .lastName("Simpson")
+            .address(Address.builder().id(2L).build())
+            .phoneNumber(PhoneNumber.builder().id(404L).build())
+            .build();
+
+        when(addressRepository.findAddress(2L)).thenReturn(Optional.of(ADDRESS_2));
+        when(phoneNumberRepository.findPhoneNumber(404L)).thenReturn(Optional.empty());
+
+        expectedException.expect(BadRequestException.class);
+        expectedException.expectMessage("Contact contains unknown phone number IDs");
+
+        contactService.updateContact(1L, updateSubmission);
+    }
 }
