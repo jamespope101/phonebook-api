@@ -101,7 +101,7 @@ public class HibernateContactRepositoryTest {
 
     @Test
     public void shouldGetAllContactsSortedAlphabeticallyByLastName() {
-        List<Contact> contacts = contactRepository.getContacts();
+        List<Contact> contacts = contactRepository.getAllContacts();
 
         assertThat(contacts).hasSize(2)
             .extracting(Contact::getId, Contact::getTitle, Contact::getFirstName, Contact::getMiddleName, Contact::getLastName,

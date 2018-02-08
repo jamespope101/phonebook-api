@@ -39,7 +39,7 @@ public class HibernateContactRepository implements ContactRepository {
     }
 
     @Override
-    public List<Contact> getContacts() {
+    public List<Contact> getAllContacts() {
         return (List<Contact>) sessionFactory.getCurrentSession()
             .createCriteria(Contact.class)
             .addOrder(Order.asc("lastName"))

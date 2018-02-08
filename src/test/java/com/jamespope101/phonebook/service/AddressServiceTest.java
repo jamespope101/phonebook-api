@@ -91,7 +91,6 @@ public class AddressServiceTest {
         addressService.updateAddress(1L, updateSubmission);
 
         assertThat(existingAddress).isEqualToComparingFieldByField(updateSubmission);
-
     }
 
 }

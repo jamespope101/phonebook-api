@@ -1,8 +1,10 @@
 package com.jamespope101.phonebook.service;
 
 import com.jamespope101.phonebook.domain.Address;
+import com.jamespope101.phonebook.domain.Contact;
 import com.jamespope101.phonebook.domain.PhoneNumber;
 import com.jamespope101.phonebook.domain.PhoneType;
+import com.jamespope101.phonebook.domain.Title;
 
 /**
  * Created by jpope on 08/02/2018.
@@ -40,5 +42,25 @@ class ServiceTestFixtures {
         .streetName("Country Lane")
         .postcode("E3 211")
         .country("Sweden")
+        .build();
+
+    static final Contact CONTACT_1 = Contact.builder()
+        .id(1L)
+        .title(Title.MR)
+        .firstName("James")
+        .middleName("Edward")
+        .lastName("Pope")
+        .address(ADDRESS_1)
+        .phoneNumber(PHONE_NUMBER_1)
+        .build();
+
+    static final Contact CONTACT_2 = Contact.builder()
+        .id(1L)
+        .title(Title.MX)
+        .firstName("Alex")
+        .middleName(null)
+        .lastName("Jones")
+        .address(ADDRESS_2)
+        .phoneNumber(PHONE_NUMBER_2)
         .build();
 }

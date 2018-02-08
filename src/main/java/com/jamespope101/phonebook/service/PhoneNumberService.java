@@ -31,13 +31,13 @@ public class PhoneNumberService implements PhoneNumberOps {
     @Override
     public PhoneNumber findPhoneNumber(Long id) {
         return phoneNumberRepository.findPhoneNumber(id).orElseThrow(
-            () -> new NotFoundException("Could not find phone number with id " +id));
+            () -> new NotFoundException("Could not find phone number with id " + id));
     }
 
     @Override
     public void updatePhoneNumber(Long id, PhoneNumber updateSubmission) {
         PhoneNumber existing = phoneNumberRepository.findPhoneNumber(id).orElseThrow(
-                () -> new NotFoundException("Could not find phone number with id " +id));
+                () -> new NotFoundException("Could not find phone number with id " + id));
 
         existing.setType(updateSubmission.getType());
         existing.setCountryCode(updateSubmission.getCountryCode());

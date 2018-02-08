@@ -86,6 +86,5 @@ public class PhoneNumberServiceTest {
         phoneNumberService.updatePhoneNumber(1L, updateSubmission);
 
         assertThat(existingPhoneNumber).isEqualToComparingFieldByField(updateSubmission);
-
     }
 }

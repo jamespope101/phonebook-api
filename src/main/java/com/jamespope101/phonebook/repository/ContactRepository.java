@@ -10,7 +10,7 @@ import com.jamespope101.phonebook.domain.Contact;
  */
 public interface ContactRepository {
 
-    List<Contact> getContacts();
+    List<Contact> getAllContacts();
 
     Optional<Contact> findContactById(Long id);
 
