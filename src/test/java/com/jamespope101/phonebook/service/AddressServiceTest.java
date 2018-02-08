@@ -15,8 +15,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import static com.jamespope101.phonebook.service.ServiceTestFixtures.ADDRESS_1;
-import static com.jamespope101.phonebook.service.ServiceTestFixtures.ADDRESS_2;
+import static com.jamespope101.phonebook.TestFixtures.ADDRESS_1;
+import static com.jamespope101.phonebook.TestFixtures.ADDRESS_2;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
