@@ -1,5 +1,6 @@
 package com.jamespope101.phonebook.functional;
 
+import java.io.IOException;
 import java.io.StringReader;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -10,6 +11,7 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.google.common.io.Resources;
 import org.dbunit.DatabaseUnitException;
 import org.dbunit.database.DatabaseConfig;
 import org.dbunit.database.DatabaseDataSourceConnection;
@@ -22,7 +24,6 @@ import org.dbunit.operation.DatabaseOperation;
 import org.glassfish.jersey.internal.util.Base64;
 import org.junit.Before;
 import org.junit.ClassRule;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.transaction.PlatformTransactionManager;
 
@@ -30,15 +31,18 @@ import static com.jamespope101.phonebook.repository.DatasetTemplates.ADDRESS_TEM
 import static com.jamespope101.phonebook.repository.DatasetTemplates.CONTACT_PHONE_NUMBER_TEMPLATE;
 import static com.jamespope101.phonebook.repository.DatasetTemplates.CONTACT_TEMPLATE;
 import static com.jamespope101.phonebook.repository.DatasetTemplates.PHONE_NUMBER_TEMPLATE;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static javax.ws.rs.core.Response.Status.OK;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
  * Created by jpope on 08/02/2018.
  */
-public class EndToEndTest {
+public class FunctionalTests {
 
     private static final String READER_USER_AUTH_HEADER = "Basic " + Base64.encodeAsString("reader:reader");
+
+    private String expectedContactsJson;
 
     @ClassRule
     public static TestApplication application = TestApplication.running();
@@ -51,10 +55,12 @@ public class EndToEndTest {
     private FlatXmlDataSet dataSet;
 
     @Before
-    public void setup() {
+    public void setup() throws IOException {
         this.client = ClientBuilder.newClient();
         this.dataSource = application.getApplication().context().getBean(DataSource.class);
         this.platformTransactionManager = application.getApplication().context().getBean(PlatformTransactionManager.class);
+
+        expectedContactsJson = Resources.toString(Resources.getResource("expected-contacts.json"), UTF_8);
     }
 
     @Before
@@ -94,9 +100,8 @@ public class EndToEndTest {
         }
     }
 
-    @Ignore("fix test")
     @Test
-    public void shouldGetAllContacts() {
+    public void shouldGetAllContactsSortedByLastName() {
         Response response = client.target("http://localhost:2018/phonebook/contacts")
             .request(MediaType.APPLICATION_JSON_TYPE)
             .header(HttpHeaders.AUTHORIZATION, READER_USER_AUTH_HEADER)
@@ -104,8 +109,8 @@ public class EndToEndTest {
 
         assertThat(response.getStatus()).isEqualTo(OK.getStatusCode());
 
-        String json = response.readEntity(String.class);
+        String jsonResponse = response.readEntity(String.class);
 
-        assertThat(json).isNotEmpty();
+        assertThat(jsonResponse).isEqualTo(expectedContactsJson);
     }
 }

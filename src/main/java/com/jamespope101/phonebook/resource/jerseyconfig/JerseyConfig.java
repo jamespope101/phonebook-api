@@ -2,6 +2,7 @@ package com.jamespope101.phonebook.resource.jerseyconfig;
 
 import java.util.Set;
 import javax.inject.Inject;
+import javax.inject.Named;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 
@@ -15,6 +16,7 @@ import static com.jamespope101.phonebook.resource.jerseyconfig.ExceptionHandlers
 /**
  * Created by jpope on 08/02/2018.
  */
+@Named
 public class JerseyConfig extends ResourceConfig {
 
     private static final Class<?>[] PROVIDERS = {

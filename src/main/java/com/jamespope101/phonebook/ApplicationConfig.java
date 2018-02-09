@@ -4,13 +4,18 @@ import java.sql.Driver;
 import java.util.Properties;
 import javax.inject.Named;
 import javax.sql.DataSource;
+import javax.ws.rs.client.Client;
 
+import com.jamespope101.phonebook.resource.jerseyconfig.JerseyConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import org.glassfish.jersey.server.ResourceConfig;
+import org.glassfish.jersey.servlet.ServletContainer;
 import org.hibernate.SessionFactory;
 import org.hibernate.dialect.Dialect;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -33,6 +38,9 @@ public class ApplicationConfig {
     private static final String[] HIBERNATE_PACKAGES = {
         "com.jamespope101.phonebook.domain",
     };
+
+    @Value("${spring.jersey.application-path}")
+    private String applicationPath;
 
     @Bean
     DataSource dataSource(@Value("${jdbc.url}") String jdbcUrl,
@@ -81,4 +89,14 @@ public class ApplicationConfig {
         return new HibernateTransactionManager(sessionFactory);
     }
 
+    @Bean
+    ServletRegistrationBean jersey(ResourceConfig resourceConfig) {
+        ServletContainer jerseyServlet = new ServletContainer(resourceConfig);
+        return new ServletRegistrationBean(jerseyServlet, String.format("/%s/*", applicationPath));
+    }
+
+    @Bean
+    Client client() {
+        return JerseyConfig.newClient();
+    }
 }

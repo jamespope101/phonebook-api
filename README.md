@@ -16,7 +16,7 @@ The application logic is split into three separate layers, and components residi
 - A service layer to enforce business-defined rules and error-handling.
 - A resource layer which defines the REST API paths and requests.
 
-There are also functional tests in EndToEndTest, which spins up a local application with some pre-initialised data and asserts on 
+There are also functional tests in FunctionalTests, which spins up a local application with some pre-initialised data and asserts on 
 the responses to various requests against the API.
 
 ## Getting Started
