@@ -60,4 +60,5 @@ public class Contact {
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "address", nullable = false)
     private Address address;
+
 }

@@ -14,6 +14,7 @@ import com.jamespope101.phonebook.repository.AddressRepository;
 import com.jamespope101.phonebook.repository.ContactRepository;
 import com.jamespope101.phonebook.repository.PhoneNumberRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import static java.util.stream.Collectors.toSet;
 
@@ -21,6 +22,7 @@ import static java.util.stream.Collectors.toSet;
  * Created by jpope on 08/02/2018.
  */
 @Service
+@Transactional
 public class ContactService implements ContactOps {
 
     private ContactRepository contactRepository;

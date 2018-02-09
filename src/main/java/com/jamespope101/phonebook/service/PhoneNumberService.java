@@ -8,11 +8,13 @@ import com.jamespope101.phonebook.domain.PhoneNumber;
 import com.jamespope101.phonebook.repository.PhoneNumberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by jpope on 08/02/2018.
  */
 @Service
+@Transactional
 public class PhoneNumberService implements PhoneNumberOps {
 
     @Autowired

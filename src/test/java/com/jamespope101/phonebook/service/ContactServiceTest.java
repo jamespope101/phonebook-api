@@ -158,7 +158,6 @@ public class ContactServiceTest {
             .id(1L)
             .title(Title.MRS)
             .firstName("Marge")
-            .middleName(null)
             .lastName("Simpson")
             .address(Address.builder().id(2L).build())
             .phoneNumber(PhoneNumber.builder().id(404L).build())

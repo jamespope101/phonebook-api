@@ -1,0 +1,7 @@
+{
+  "id" : 1,
+  "type" : "fax",
+  "countryCode" : 43,
+  "areaCode" : 111,
+  "number" : 222222
+}

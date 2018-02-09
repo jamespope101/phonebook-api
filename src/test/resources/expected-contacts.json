@@ -19,12 +19,6 @@
   "middleName" : "J",
   "lastName" : "Simpson",
   "phoneNumbers" : [ {
-    "id" : 2,
-    "type" : "mobile",
-    "countryCode" : 44,
-    "areaCode" : 774,
-    "number" : 192031
-  }, {
     "id" : 1,
     "type" : "home",
     "countryCode" : 44,

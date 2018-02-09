@@ -8,11 +8,13 @@ import com.jamespope101.phonebook.domain.Address;
 import com.jamespope101.phonebook.repository.AddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Created by jpope on 08/02/2018.
  */
 @Service
+@Transactional
 public class AddressService implements AddressOps {
 
     @Autowired
