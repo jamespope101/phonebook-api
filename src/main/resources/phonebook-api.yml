@@ -3,9 +3,15 @@ spring:
   application:
     name: Phonebook-Api
 server:
+  port: 2019
   address: 0.0.0.0
   use-forward-headers: true
   jsp-servlet.registered: false
+jdbc:
+  driverClassName: org.h2.Driver
+  url: jdbc:h2:mem:phonebook
+  user: phonebook
+  pass: password
 hibernate:
   show_sql: false
   dialect: org.hibernate.dialect.MySQL5Dialect

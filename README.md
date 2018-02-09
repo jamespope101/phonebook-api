@@ -5,7 +5,7 @@
 This Spring Boot application provides a REST API for managing a phonebook. Frameworks and libraries used include:
 - Spring for dependency injection
 - Spring security for authorisation using Basic Authentication headers
-- Hibernate for ORM
+- Hibernate for ORM (intended with MySQL database)
 - Jackson for JSON serialisation
 - H2 for in-memory database (intended use MySQL in production environment)
 - Flyway for database table initialisation
@@ -29,12 +29,9 @@ the responses to various requests against the API.
 `./gradlew clean build`
 
 ### Running the App Locally
-The app can be run locally by running ApplicationBoot.main() with the following VM options in an IntelliJ run configuration:
+The app can be run locally by running ApplicationBoot.main()
 
-`-Dspring.profiles.active=LOCAL`
-
-This will run the application with the default configuration properties in `src/main/resources/phonebook-api.yml`, as well as overrides for the local profile
-stored in `src/main/resources/phonebook-api-local.yml`.
+This will run the application with the default configuration properties in `src/main/resources/phonebook-api.yml`.
 
 ## Testing
 All unit/functional tests will be run as part of the build task.
